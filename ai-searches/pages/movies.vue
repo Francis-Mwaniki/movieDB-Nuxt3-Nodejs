@@ -16,12 +16,12 @@
     <div class="box pt-6">
       <div class="box-wrapper">
         <div
-          class="rounded-full flex items-center w-full shadow-sm border ring-1"
+          class="rounded flex items-center w-full shadow-sm border ring-1"
           :class="loading ? 'cursor-not-allowed bg-gray-500 ring-1 ' : ''"
         >
           <button
             @click="getImg"
-            class="outline-none bg-slate-900 focus:outline-none rounded-full p-3"
+            class="outline-none bg-slate-900 focus:outline-none rounded p-3"
             :class="loading ? 'cursor-not-allowed bg-gray-500' : ''"
           >
             <Icon name="ic:sharp-search" class="w-7 h-7 text-gray-100 cursor-pointer" />
@@ -41,7 +41,7 @@
         <ClientOnly>
           <button
             :class="loading ? 'cursor-not-allowed bg-gray-500' : ''"
-            class="outline-none ring-1 rounded py-1 px-6 hover:text-white gap-x-2 focus:outline-none dark:text-white text-black flex justify-center items-center mx-auto my-2"
+            class="outline-none rounded py-2 bg-red-600 px-6 hover:text-white gap-x-2 focus:outline-none dark:text-white text-black flex justify-center items-center mx-auto my-2"
             @click="refresh"
           >
             Refresh
@@ -51,21 +51,22 @@
       </div>
     </div>
     <div
-      class="flex justify-center mx-auto py-3 items-center md:text-2xl text-sm dark:text-white text-black px-1"
+      class="flex justify-center gap-1 flex-row mx-auto py-3 items-center md:text-2xl text-sm dark:text-white text-black px-1"
     >
-      Your search is "{{ query }}"
+      <button class="px-4 py-2 bg-red-600">All</button>
+      <button class="px-4 py-2 bg-red-600">Top Rated</button>
+      <button class="px-4 py-2 bg-red-600">Most popular</button>
     </div>
     <!-- component -->
-    <div class="my-5 grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="my-16 grid grid-cols-1 md:grid-cols-4 gap-4" v-if="all">
       <section
-        v-for="movie in allMovies"
+        v-for="movie in fetchMovies"
         class="hover:transition-transform hover:animate-pulse"
       >
         <img
           fit="cover"
           class="w-full h-64 object-cover cursor-pointer"
-          caption="Movie Poster"
-          src="../assets/img/movie.jpeg"
+          :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
         />
 
         <div class="text-center">
@@ -77,9 +78,11 @@
 </template>
 
 <script setup lang="ts">
+const all = ref(true);
 const allMovies = ref([]);
 const fetchMovies = ref([]);
 const query = ref("");
+const not_connected = ref(false);
 const loading = ref(false);
 const downloading = ref(false);
 const status = ref(false);
@@ -91,7 +94,7 @@ const getImg = async () => {
   loading.value = true;
   console.log(query.value);
 
-  const res = await fetch(`http://localhost:5000/search/${query.value}`);
+  const res = await fetch(`http://localhost:8000/search/${query.value}`);
   if (!res.ok) {
     throw new Error("Error fetching data");
   }
@@ -103,6 +106,21 @@ const getImg = async () => {
 
   loading.value = false;
 };
+const getTopRated = async () => {
+  const res = await fetch("http://localhost:8000/top-rated");
+  if (!res.ok) {
+    not_connected.value = true;
+    throw new Error("Error fetching data");
+  }
+  const data = await res.json();
+  fetchMovies.value = data;
+  console.log(fetchMovies.value);
+
+  console.log(fetchMovies.value);
+};
+onMounted(() => {
+  getTopRated();
+});
 
 try {
   if (query.value !== "" && query.value !== null) {

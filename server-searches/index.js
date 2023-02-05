@@ -7,7 +7,7 @@ const cors= require('cors');
 //init express
 const app = express();
 // Port
-const port = process.env.PORT || 3000;
+const port = 8000 || process.env.PORT;
 
 // middleware
 app.use(express.json());
@@ -15,9 +15,39 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 //create a route
-app.get('/', (req, res) => {
+app.get('/all', (req, res) => {
     res.send('Hello World!');
 });
+//all top rated movies
+app.get('/top-rated', async(req, res) => {
+    console.log(req.params.id);
+    await moviedb.movieTopRated()
+    .then(async(response) => {
+        res.send(response.results);
+    }).catch((error) => {
+        console.log(error);
+    })
+    });
+    //all now playing movies
+app.get('/now', async(req, res) => {
+    console.log(req.params.id);
+    await moviedb.movieTopRated()
+    .then(async(response) => {
+        res.send(response.results);
+    }).catch((error) => {
+        console.log(error);
+    })
+    });
+    //all most popular movies
+app.get('/popular', async(req, res) => {
+    console.log(req.params.id);
+    await moviedb.moviePopular()
+    .then(async(response) => {
+        res.send(response.results);
+    }).catch((error) => {
+        console.log(error);
+    })
+    });
 //search for a movies
 app.get('/search/:query', async (req, res) => {
     console.log(req.params.query);
