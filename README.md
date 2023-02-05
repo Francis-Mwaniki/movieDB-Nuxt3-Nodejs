@@ -17,7 +17,7 @@ git clone git@github.com:Francis-Mwaniki/movieDB-Nuxt3-Nodejs.git
 ```sh
  npm install
 ```
-    or
+    
 ```sh
 yarn install
 ```
