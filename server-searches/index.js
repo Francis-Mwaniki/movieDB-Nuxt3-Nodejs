@@ -3,20 +3,29 @@ const dotenv = require('dotenv');
 dotenv.config();
 const { MovieDb } = require('moviedb-promise')
 const moviedb = new MovieDb(process.env.API_KEY)
+const cors= require('cors');
 //init express
 const app = express();
 // Port
 const port = process.env.PORT || 3000;
+
+// middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 //create a route
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 //search for a movies
-app.get('/search/:query', (req, res) => {
-    moviedb.searchMovie({ query: req.params.query })
-    .then(response => {
-        res.send(response);
+app.get('/search/:query', async (req, res) => {
+    console.log(req.params.query);
+    await moviedb.searchMovie({ query: req.params.query })
+    .then(async(response) => {
+        const { results } = await response;
+        console.log(results);
+        res.send(results);
     })
     .catch(error => {
         res.send(error);
