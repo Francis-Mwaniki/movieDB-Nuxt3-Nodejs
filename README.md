@@ -1,0 +1,25 @@
+# This guide is for server side
+## api used 
+```sh
+npm install moviedb-promise --save
+```
+or
+```sh
+yarn add moviedb-promise 
+```
+# project usage
+  ### clone this project
+    ```sh
+    git clone --
+    ```
+ ### run this commands
+    ```sh
+    npm install
+    ```
+    or
+    ```sh
+    yarn install
+    ```
+
+
+### thanks    

@@ -1,0 +1,9 @@
+{
+  "name": "server-searches",
+  "version": "1.0.0",
+  "description": "movie db",
+  "main": "index.js",
+  "author": "francis mwaniki",
+  "license": "MIT",
+  "private": true
+}
