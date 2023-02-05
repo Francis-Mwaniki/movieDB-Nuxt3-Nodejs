@@ -1,8 +1,9 @@
 # This guide is for server side
    ### check out for nuxt here 
+   
     [Demo](https://github.com/Francis-Mwaniki/movieDB-Nuxt3-Nodejs/blob/main/ai-searches/README.md)
 
-    
+    [deployment documentation](https://nuxt.com/docs/getting-started/deployment)
 
 ## api used 
 ```sh
