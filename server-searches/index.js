@@ -31,8 +31,9 @@ app.get('/top-rated', async(req, res) => {
     //all now playing movies
 app.get('/now', async(req, res) => {
     console.log(req.params.id);
-    await moviedb.movieTopRated()
+    await moviedb.movieNowPlaying()
     .then(async(response) => {
+        console.log(response.results);
         res.send(response.results);
     }).catch((error) => {
         console.log(error);

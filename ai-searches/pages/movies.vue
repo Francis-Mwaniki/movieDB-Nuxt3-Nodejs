@@ -1,18 +1,26 @@
 <template>
   <div class="bg-slate-900">
-    <!-- <div
-          class="flex justify-around gap-x-4 items-center dark:text-black rounded text-black flex-row mx-auto max-w-lg dark:bg-gray-300 py-2 bg-gray-800 px-2 my-2"
-          v-show="status"
+    <div
+      wire:isFetching
+      v-show="isFetching"
+      class="fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-gray-900 opacity-75 flex flex-col items-center justify-center"
+    >
+      <h2 class="text-center dark:text-pink-300 text-indigo-100 text-xl font-semibold">
+        <img src="../assets/img/loader.gif" class="bg-slate-900 w-20 h-20" alt="" />
+      </h2>
+      <p class="sm:w-1/3 w-2/3 text-center text-white text-2xl">
+        it's loading hold on.....
+      </p>
+      <ClientOnly>
+        <button
+          class="btn-3 ring-1 ring-white hover:bg-slate-800 bg-gray-900 rounded-lg"
+          @click="isFetching = false"
         >
-          <p class="text-lg leading-relaxed text-center" v-show="success">
-            {{ success }}
-          </p>
-          <Icon
-            @click="status = false"
-            class="text-white p-1 cursor-pointer h-7 w-7 rounded-full bg-gray-700"
-            name="ic:baseline-close"
-          />
-        </div> -->
+          Cancel
+          <Icon name="ic:outline-cancel" />
+        </button>
+      </ClientOnly>
+    </div>
     <div class="box pt-6">
       <div class="box-wrapper">
         <div
@@ -53,14 +61,46 @@
     <div
       class="flex justify-center gap-1 flex-row mx-auto py-3 items-center md:text-2xl text-sm dark:text-white text-black px-1"
     >
-      <button class="px-4 py-2 bg-red-600">All</button>
-      <button class="px-4 py-2 bg-red-600">Top Rated</button>
-      <button class="px-4 py-2 bg-red-600">Most popular</button>
+      <button class="px-4 py-2 bg-red-600" @click="nowPlaying">Now Playing</button>
+      <button class="px-4 py-2 bg-red-600" @click="getTopRated">Top Rated</button>
+      <button class="px-4 py-2 bg-red-600" @click="getMostPopular">Most popular</button>
     </div>
     <!-- component -->
-    <div class="my-16 grid grid-cols-1 md:grid-cols-4 gap-4" v-if="all">
+    <div class="my-16 grid grid-cols-1 md:grid-cols-4 gap-4" v-if="now">
       <section
-        v-for="movie in fetchMovies"
+        v-for="movie in fetchPlayingMovies"
+        class="hover:transition-transform hover:animate-pulse"
+      >
+        <img
+          fit="cover"
+          class="w-full h-64 object-cover cursor-pointer"
+          :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+        />
+
+        <div class="text-center">
+          <h1 class="text-lg font-bold">{{ movie.title }}</h1>
+        </div>
+      </section>
+    </div>
+    <div class="my-16 grid grid-cols-1 md:grid-cols-4 gap-4" v-if="top_rated">
+      <section
+        v-for="movie in fetchTopRatedMovies"
+        class="hover:transition-transform hover:animate-pulse"
+      >
+        <img
+          fit="cover"
+          class="w-full h-64 object-cover cursor-pointer"
+          :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+        />
+
+        <div class="text-center">
+          <h1 class="text-lg font-bold">{{ movie.title }}</h1>
+        </div>
+      </section>
+    </div>
+    <div class="my-16 grid grid-cols-1 md:grid-cols-4 gap-4" v-if="most_popular">
+      <section
+        v-for="movie in fetchMostPopularMovies"
         class="hover:transition-transform hover:animate-pulse"
       >
         <img
@@ -78,14 +118,19 @@
 </template>
 
 <script setup lang="ts">
-const all = ref(true);
+const now = ref(true);
 const allMovies = ref([]);
-const fetchMovies = ref([]);
+const isFetching = ref(false);
+const fetchPlayingMovies = ref([]);
+const fetchTopRatedMovies = ref([]);
 const query = ref("");
+const fetchMostPopularMovies = ref([]);
 const not_connected = ref(false);
 const loading = ref(false);
 const downloading = ref(false);
 const status = ref(false);
+const most_popular = ref(false);
+const top_rated = ref(false);
 const success = ref("");
 const refresh = () => {
   window.location.reload();
@@ -93,7 +138,7 @@ const refresh = () => {
 const getImg = async () => {
   loading.value = true;
   console.log(query.value);
-
+  isFetching.value = true;
   const res = await fetch(`http://localhost:8000/search/${query.value}`);
   if (!res.ok) {
     throw new Error("Error fetching data");
@@ -101,25 +146,69 @@ const getImg = async () => {
   const data = await res.json();
   allMovies.value = data;
   console.log(allMovies.value);
+  setTimeout(() => {
+    isFetching.value = false;
+  }, 4000);
 
   //console.log(allMovies.value.filter((movie) => movie.results.poster_path !== null));
 
   loading.value = false;
 };
 const getTopRated = async () => {
+  isFetching.value = true;
   const res = await fetch("http://localhost:8000/top-rated");
   if (!res.ok) {
     not_connected.value = true;
     throw new Error("Error fetching data");
   }
+  most_popular.value = false;
+  now.value = false;
+  top_rated.value = true;
   const data = await res.json();
-  fetchMovies.value = data;
-  console.log(fetchMovies.value);
 
-  console.log(fetchMovies.value);
+  fetchTopRatedMovies.value = data;
+  setTimeout(() => {
+    isFetching.value = false;
+  }, 4000);
 };
+const nowPlaying = async () => {
+  isFetching.value = true;
+  const res = await fetch("http://localhost:8000/now");
+  if (!res.ok) {
+    not_connected.value = true;
+    throw new Error("Error fetching data");
+  }
+  top_rated.value = false;
+  most_popular.value = false;
+  now.value = true;
+  const data = await res.json();
+  fetchPlayingMovies.value = data;
+  setTimeout(() => {
+    isFetching.value = false;
+  }, 4000);
+  console.log(fetchPlayingMovies.value);
+};
+
+const getMostPopular = async () => {
+  isFetching.value = true;
+  const res = await fetch("http://localhost:8000/popular");
+  if (!res.ok) {
+    not_connected.value = true;
+    throw new Error("Error fetching data");
+  }
+  top_rated.value = false;
+  now.value = false;
+  most_popular.value = true;
+  const data = await res.json();
+  fetchMostPopularMovies.value = data;
+  setTimeout(() => {
+    isFetching.value = false;
+  }, 4000);
+  console.log(fetchMostPopularMovies.value);
+};
+
 onMounted(() => {
-  getTopRated();
+  nowPlaying();
 });
 
 try {
