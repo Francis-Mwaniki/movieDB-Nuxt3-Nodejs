@@ -7,8 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "nodemon": "nodemon index.js",
+    "start": "node index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
