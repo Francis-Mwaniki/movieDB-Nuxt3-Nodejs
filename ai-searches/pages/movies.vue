@@ -129,10 +129,7 @@
     </div>
 
     <div class="my-16 grid grid-cols-1 md:grid-cols-4 gap-4" v-if="now">
-      <section
-        v-for="movie in fetchPlayingMovies"
-        class="hover:transition-transform hover:animate-pulse"
-      >
+      <section v-for="movie in fetchPlayingMovies" class="hover:transition-transform">
         <label for="my-modal-4" class="" @click="getNowPlayingId(movie.id)">
           <img
             fit="cover"
@@ -142,6 +139,7 @@
         </label>
         <div class="text-center">
           <h1 class="text-lg font-bold">{{ movie.title }}</h1>
+          <p class="py-4">release-{{ movie.release_date }}</p>
         </div>
       </section>
     </div>
@@ -269,10 +267,7 @@
     <!-- End of the 4 modal -->
 
     <div class="my-16 grid grid-cols-1 md:grid-cols-4 gap-4" v-if="top_rated">
-      <section
-        v-for="movie in fetchTopRatedMovies"
-        class="hover:transition-transform hover:animate-pulse"
-      >
+      <section v-for="movie in fetchTopRatedMovies" class="hover:transition-transform">
         <label for="my-modal-5" class="" @click="getTopRatedId(movie.id)">
           <img
             fit="cover"
@@ -283,14 +278,12 @@
 
         <div class="text-center">
           <h1 class="text-lg font-bold">{{ movie.title }}</h1>
+          <p class="py-4">release-{{ movie.release_date }}</p>
         </div>
       </section>
     </div>
     <div class="my-16 grid grid-cols-1 md:grid-cols-4 gap-4" v-if="most_popular">
-      <section
-        v-for="movie in fetchMostPopularMovies"
-        class="hover:transition-transform hover:animate-pulse"
-      >
+      <section v-for="movie in fetchMostPopularMovies" class="hover:transition-transform">
         <label for="my-modal-6" class="" @click="getMostPopularId(movie.id)">
           <img
             fit="cover"
@@ -300,6 +293,7 @@
         </label>
         <div class="text-center">
           <h1 class="text-lg font-bold">{{ movie.title }}</h1>
+          <p class="py-4">release-{{ movie.release_date }}</p>
         </div>
       </section>
     </div>

@@ -66,8 +66,9 @@ app.get('/search/:query', async (req, res) => {
 //search a person
 app.get('/person/:query', (req, res) => {
     moviedb.searchPerson({ query: req.params.query })
-    .then(response => {
-        res.send(response);
+    .then(async(response) => {
+        const { results } = await response;
+        res.send(results);
     }).catch((error) => {
         console.log(error);
     })
