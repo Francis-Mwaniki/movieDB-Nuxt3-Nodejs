@@ -1,3 +1,8 @@
+### preview
+<img src="https://github.com/Francis-Mwaniki/movieDb-Api-client/blob/main/assets/loading.png" />
+<img src="https://github.com/Francis-Mwaniki/movieDb-Api-client/blob/main/assets/movieDB.png" />
+<img src="https://github.com/Francis-Mwaniki/movieDb-Api-client/blob/main/assets/modernui.png" />
+
 # This guide is for server side
    ### check out for nuxt here 
 
